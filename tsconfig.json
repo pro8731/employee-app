@@ -18,10 +18,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve",
-    "paths": {
-      "@mui/material": ["./node_modules/mui-material/src"],
-    }
+    "jsx": "preserve"
   },
   "include": [
     "src"

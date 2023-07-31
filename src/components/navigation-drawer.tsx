@@ -7,8 +7,8 @@ import { Link } from "react-router-dom";
 
 const drawerWidth = 260;
 
-const NavigationDrawer: React.FC<{}> = () => {
-    return(
+const NavigationDrawer: React.FC = () => {
+     return(
         <Drawer
         sx={{
           width: drawerWidth,
@@ -34,7 +34,9 @@ const NavigationDrawer: React.FC<{}> = () => {
                   </ListItemButton>
                 </ListItem>
                 </Link>
+
                 <Divider />
+
                 <Toolbar>
                   <Typography variant="h6" noWrap component="div">
                   React-hook-form
@@ -50,6 +52,7 @@ const NavigationDrawer: React.FC<{}> = () => {
                   </ListItemButton>
                 </ListItem>
                 </Link>
+                <Link to="/edit-employee-react-hook">
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
@@ -58,6 +61,7 @@ const NavigationDrawer: React.FC<{}> = () => {
                     <ListItemText primary="Edit Employee" />
                   </ListItemButton>
                 </ListItem>
+                </Link>
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
@@ -66,7 +70,9 @@ const NavigationDrawer: React.FC<{}> = () => {
                     <ListItemText primary="Delete Employee" />
                   </ListItemButton>
                 </ListItem>
+
                 <Divider />
+
                 <Toolbar>
                   <Typography variant="h6" noWrap component="div">
                     Formik
@@ -82,6 +88,7 @@ const NavigationDrawer: React.FC<{}> = () => {
                   </ListItemButton>
                 </ListItem>
                 </Link>
+                <Link to="/edit-employee-formik">
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
@@ -90,6 +97,7 @@ const NavigationDrawer: React.FC<{}> = () => {
                     <ListItemText primary="Edit Employee" />
                   </ListItemButton>
                 </ListItem>
+                </Link>
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>

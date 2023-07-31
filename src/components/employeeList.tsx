@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { IEmployeeList } from '../types/interfaces'
+import { DataGrid, GridColDef, GridRowId, GridRowSelectionModel } from '@mui/x-data-grid';
+import { IEmployee, IEmployeeList, IEmployeeListProps } from '../types/interfaces'
 import { getEmployees } from '../services/employee.service';
 
 
@@ -28,8 +28,12 @@ const columns: GridColDef[] = [
   ];
 
 
-const EmployeeList: React.FC<{}> = () => {
+const EmployeeList: React.FC<IEmployeeListProps> = ({selectedEmployeeId, updateSelectedEmployeeId, updateSelectedEmployee}) => {
     const [employee, setEmployee] = useState<IEmployeeList>([]);
+    const [selectedRowId, setSelectedRowId] = useState<number>();
+    const [selectionModel, setSelectionModel] = React.useState<GridRowSelectionModel>(
+      () => employee.filter((r) => r.id > 0).map((r) => r.id)
+    );
 
     const setEmployees = () => {
       getEmployees().then((data: any) => {
@@ -44,18 +48,51 @@ const EmployeeList: React.FC<{}> = () => {
     useEffect(
       function setEmployeesOnMounting() {
       setEmployees();
-     }, []);
-  
+      // alert("on mouting initial value passed in from parent: " + selectedEmployeeId);
+      setSelectedRowId(selectedEmployeeId);
+    }, []);
+
+    const onRowSelectionModelChangeHandler = (ids: any) => {
+      if (ids.length > 1) {
+        const selectionSet = new Set(selectionModel);
+        const result = ids.filter((s: GridRowId) => !selectionSet.has(s));
+
+        ids = result;
+
+        setSelectionModel(ids);
+      } else {
+        setSelectionModel(ids);
+      }
+
+      const selectedIDs = new Set(ids);
+      setSelectedRowId(ids);
+      let selectedRowId = Number(ids[0]);
+      updateSelectedEmployeeId(selectedRowId);
+      const selectedRowData = employee.filter((row: { id: GridRowId; }) =>
+        selectedIDs.has(selectedRowId),
+      );
+      updateSelectedEmployee(selectedRowData[selectedRowId-1]);
+    }
+
     return (
         <>
           <h3 style={{ textAlign: 'left'}}>Employee List</h3>
-          <DataGrid autoPageSize columnHeaderHeight={50} rowHeight={25} rows={employee} columns={columns} /> 
+          <DataGrid sx={{
+              "& .MuiDataGrid-columnHeaderCheckbox .MuiDataGrid-columnHeaderTitleContainer": {
+                display: "none"
+              }
+            }}
+            autoPageSize 
+            checkboxSelection
+            columnHeaderHeight={50} 
+            rowHeight={25} 
+            rows={employee} 
+            columns={columns} 
+            rowSelectionModel={selectedRowId}
+            onRowSelectionModelChange={onRowSelectionModelChangeHandler}
+          /> 
         </>
     );
 };
 
 export default EmployeeList;
-
-
-
-  

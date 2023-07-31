@@ -1,16 +1,39 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import EmployeeList from './components/employeeList';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import Toolbar from '@mui/material/Toolbar';
+import { Grid } from '@mui/material';
 import { Route, Routes } from 'react-router-dom';
-import CreateEmployeeReactHookForm from './components/createEmployee.rhf';
-import CreateEmployeeFormik from './components/createEmployee.formik';
+import EmployeeReactHookForm from './components/employee.reactHookForm';
+import EmployeeFormik from './components/employee.formik';
 import NavigationDrawer from './components/navigation-drawer';
 import ApplicationHeader from './components/application-header';
-import { Box, CssBaseline, Grid, Toolbar } from '@mui/material';
-
+import { IEmployee } from './types/interfaces';
+import CreateEmployee from './components/createEmployee';
+import EditEmployee from './components/editEmployee';
 
 
 function App() {
+  const [selectedEmployee, setSelectedEmployee] = useState<IEmployee>();
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<number>(-1);
+
+  const initEmployee = {
+    id: 0,
+    firstName: "", lastName: "", email: "", phoneNumber: "",            
+    addresses: [{ streetName: "", apartmentNumber: 0, postalCode: "", state: "", country: "" }]
+  };  
+
+  const updateSelectedEmployeeId = (id: number):void => {
+    setSelectedEmployeeId(id);
+    // alert("selectedRow: " + id);
+  }
+
+  const updateSelectedEmployee = (data: any):void => {
+    setSelectedEmployee(data);
+  }
+
   return (
     <div className="App">
 
@@ -18,7 +41,6 @@ function App() {
       <CssBaseline />
 
       <ApplicationHeader />
-
       <NavigationDrawer />
 
       <Box
@@ -31,11 +53,24 @@ function App() {
           <Grid item xs={12}>
 
             <div style={{ marginTop: '20px', height: 300, width: '100%' }}>
+            {/* <h3 style={{ textAlign: 'right'}}>selectedEmployeeId={selectedEmployeeId}</h3> */}
 
               <Routes>
-                <Route path="/" element={<EmployeeList />} />
-                <Route path="/add-employee-react-hook" element={<CreateEmployeeReactHookForm />} />
-                <Route path="/add-employee-formik" element={<CreateEmployeeFormik />} /> 
+                <Route path="/" element={<EmployeeList selectedEmployeeId={selectedEmployeeId} updateSelectedEmployeeId={updateSelectedEmployeeId} updateSelectedEmployee={updateSelectedEmployee} />} />
+
+                <Route path="/add-employee-react-hook" element={<CreateEmployee formComponent={<EmployeeReactHookForm employee={initEmployee} />} />} />
+                <Route path="/add-employee-formik" element={<CreateEmployee formComponent={<EmployeeFormik employee={initEmployee} />} />} /> 
+
+                {selectedEmployeeId !== undefined && selectedEmployeeId > 0 ? (
+                  <>
+                  <Route path="/edit-employee-react-hook" element={<EditEmployee formComponent={<EmployeeReactHookForm employee={selectedEmployee ?? initEmployee} />} />} />
+                  <Route path="/edit-employee-formik" element={<EditEmployee formComponent={<EmployeeFormik employee={selectedEmployee ?? initEmployee} />} />} />
+                  </> 
+                ) : (
+                  <>
+                  <Route path="" />
+                  </>
+                )}
               </Routes>
 
             </div>
@@ -50,3 +85,4 @@ function App() {
 }
 
 export default App;
+
