@@ -13,6 +13,7 @@ import ApplicationHeader from './components/application-header';
 import { IEmployee } from './types/interfaces';
 import CreateEmployee from './components/createEmployee';
 import EditEmployee from './components/editEmployee';
+import DeleteEmployee from './components/deleteEmployee';
 
 
 function App() {
@@ -27,11 +28,12 @@ function App() {
 
   const updateSelectedEmployeeId = (id: number):void => {
     setSelectedEmployeeId(id);
-    // alert("selectedRow: " + id);
+    // alert("app update employee id - selectedRow: " + id);
   }
 
   const updateSelectedEmployee = (data: any):void => {
     setSelectedEmployee(data);
+    // alert("app update employee - employee: " + data);
   }
 
   return (
@@ -65,6 +67,7 @@ function App() {
                   <>
                   <Route path="/edit-employee-react-hook" element={<EditEmployee formComponent={<EmployeeReactHookForm employee={selectedEmployee ?? initEmployee} />} />} />
                   <Route path="/edit-employee-formik" element={<EditEmployee formComponent={<EmployeeFormik employee={selectedEmployee ?? initEmployee} />} />} />
+                  <Route path="/delete-employee" element={<DeleteEmployee selectedEmployeeId={selectedEmployeeId} />} />
                   </> 
                 ) : (
                   <>
