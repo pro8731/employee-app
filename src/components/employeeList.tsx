@@ -44,11 +44,10 @@ const EmployeeList: React.FC<IEmployeeListProps> = ({selectedEmployeeId, updateS
         console.log(error);
       });
     }
-  
+
     useEffect(
       function setEmployeesOnMounting() {
       setEmployees();
-      // alert("on mouting initial value passed in from parent: " + selectedEmployeeId);
       setSelectedRowId(selectedEmployeeId);
     }, []);
 
