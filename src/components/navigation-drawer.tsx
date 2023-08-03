@@ -62,14 +62,6 @@ const NavigationDrawer: React.FC = () => {
                   </ListItemButton>
                 </ListItem>
                 </Link>
-                <ListItem disablePadding>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <PersonRemoveIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Delete Employee" />
-                  </ListItemButton>
-                </ListItem>
 
                 <Divider />
 
@@ -98,6 +90,15 @@ const NavigationDrawer: React.FC = () => {
                   </ListItemButton>
                 </ListItem>
                 </Link>
+
+                <Divider />
+
+                <Toolbar>
+                  <Typography variant="caption" noWrap component="div">
+                      Common Command
+                  </Typography>
+                </Toolbar>
+                <Link to="/delete-employee">
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
@@ -106,7 +107,8 @@ const NavigationDrawer: React.FC = () => {
                     <ListItemText primary="Delete Employee" />
                   </ListItemButton>
                 </ListItem>
-                <Divider />
+                </Link>
+
               </List>
 
           </>                
