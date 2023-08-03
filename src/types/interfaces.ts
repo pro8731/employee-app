@@ -34,3 +34,9 @@ export interface IEmployeeListProps {
 }
 
 export interface IEmployeeListProps {}
+
+export interface IEmployeeDelete {
+    selectedEmployeeId?: number;
+}
+
+export interface IEmployeeDelete {}
