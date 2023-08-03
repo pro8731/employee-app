@@ -1,10 +1,11 @@
 import { Button, Card, CardContent, Grid, TextField, Typography } from "@mui/material";
 import { useFieldArray, useForm } from "react-hook-form";
 import { IEmployee } from "../types/interfaces";
-import { addEmployee, putEmployee } from "../services/employee.service";
-import { Navigate, useNavigate } from "react-router-dom";
+import { addEmployee, getEmployee, putEmployee } from "../services/employee.service";
+import { useNavigate } from "react-router-dom";
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useEffect, useMemo } from "react";
 
 // let renderCount = 0;
 
@@ -32,7 +33,7 @@ const EmployeeReactHookForm: React.FC<{employee: IEmployee}> = ({ employee }) =>
       });
 
     const navigate = useNavigate();
-    const { register, control, handleSubmit, formState: { errors } } = useForm<IEmployee>({
+    const { register, control, handleSubmit, reset, formState: { errors } } = useForm<IEmployee>({
         defaultValues: {
             id: employee.id,
             firstName: employee.firstName, 
@@ -41,15 +42,12 @@ const EmployeeReactHookForm: React.FC<{employee: IEmployee}> = ({ employee }) =>
             phoneNumber: employee.phoneNumber,            
             addresses: employee.addresses
           },
-          mode: "onBlur",
-        //   resolver: yupResolver(validationSchema)        
       });
 
       const { fields, append, remove } = useFieldArray({
         name: "addresses",
         control
       });
-
 
       const onSubmit = (data: IEmployee) => {
         console.log(data);
@@ -61,6 +59,21 @@ const EmployeeReactHookForm: React.FC<{employee: IEmployee}> = ({ employee }) =>
         }
         navigate("/");
       }
+
+      const setEmployee = () => {
+        getEmployee(employee.id).then((data: any) => {
+          reset({...data});
+          // console.log(data);
+        })
+        .catch((error: any) => {
+          console.log(error);
+        });
+      }
+  
+      useEffect(
+        function setEmployeeOnMounting() {
+        setEmployee();
+      }, []);
 
     //   renderCount++;
 

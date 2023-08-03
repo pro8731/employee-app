@@ -2,31 +2,59 @@ import { Field, FieldArray, Form, Formik } from "formik"
 import { IEmployee } from "../types/interfaces"
 import { Button, Card, CardContent, Grid, Typography } from "@mui/material"
 import { TextField } from "formik-material-ui"
-import { addEmployee, putEmployee } from "../services/employee.service"
-import React from "react"
+import { addEmployee, getEmployee, putEmployee } from "../services/employee.service"
+import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import * as Yup from 'yup';
 
 // let renderCount = 0;
 
 const EmployeeFormik: React.FC<{employee: IEmployee}> = ({ employee }) => {
   let mode = employee.id > 0 ? 'Edit' : 'Add';
 
-  const initialValues: IEmployee = {
-    id: employee.id,
-    firstName: employee.firstName, 
-    lastName: employee.lastName, 
-    email: employee.email, 
-    phoneNumber: employee.phoneNumber,
-    addresses: [{
-        streetName: employee.addresses[0].streetName,
-        postalCode: employee.addresses[0].postalCode,
-        apartmentNumber: employee.addresses[0].apartmentNumber,
-        state: employee.addresses[0].state,
-        country: employee.addresses[0].country
-    }]
-  }
+  const [initValue, setInitValue] = useState(employee);
+  
+  const validationSchema = Yup.object().shape({
+    firstName: Yup.string().required('First Name is required'),
+    lastName: Yup.string().required('Last Name is required'),
+    email: Yup.string()
+      .required('Email is required')
+      .email('Email is invalid'),
+    phoneNumber: Yup.string()
+      .required('Phone Number is required'),
+    addresses: Yup.array().of(
+      Yup.object().shape ({
+        streetName: Yup.string()
+          .required('Street Name is required'),
+        apartmentNumber: Yup.number()
+          .required('Apartment Number is required'),
+        postalCode: Yup.string()
+          .required('Postal Code is required'),
+        state: Yup.string()
+          .required('State is required'),
+        country: Yup.string()
+          .required('Country is required')
+      }))
+    });
 
   const navigate = useNavigate();
+
+  const setEmployee = () => {
+    getEmployee(employee.id).then((data: any) => {
+      setInitValue(data);
+      console.log(data);
+    })
+    .catch((error: any) => {
+      console.log(error);
+    });
+  }
+
+  useEffect(
+    function setEmployeeOnMounting() {
+    if (mode === 'Edit') {
+      setEmployee();
+    }
+  }, []);
 
   // renderCount++;
   
@@ -37,7 +65,9 @@ const EmployeeFormik: React.FC<{employee: IEmployee}> = ({ employee }) => {
         {/* <h3 style={{ textAlign: 'right'}}>renderCount={renderCount}</h3> */}
   
           <Formik
-            initialValues={initialValues}
+            initialValues={initValue}
+            enableReinitialize
+            validationSchema={validationSchema}
             onSubmit={(values/*, actions*/) => {
               // console.log({ values/*, actions*/ });
               // alert(JSON.stringify({ values/*, actions*/}, null, 9));
