@@ -20,16 +20,19 @@ const EmployeeReactHookForm: React.FC<{employee: IEmployee}> = ({ employee }) =>
           .email('Email is invalid'),
         phoneNumber: Yup.string()
           .required('Phone Number is required'),
-        streetName: Yup.string()
-          .required('Street Name is required'),
-        apartmentNumber: Yup.number()
-          .required('Apartment Number is required'),
-        postalCode: Yup.string()
-          .required('Postal Code is required'),
-        state: Yup.string()
-          .required('State is required'),
-        country: Yup.string()
-          .required('Country is required')
+        addresses: Yup.array().of(
+          Yup.object().shape ({
+            streetName: Yup.string()
+              .required('Street Name is required'),
+            apartmentNumber: Yup.number()
+              .required('Apartment Number is required'),
+            postalCode: Yup.string()
+              .required('Postal Code is required'),
+            state: Yup.string()
+              .required('State is required'),
+            country: Yup.string()
+              .required('Country is required')
+        }))
       });
 
     const navigate = useNavigate();
