@@ -1,43 +1,41 @@
 import React, { useEffect, useState } from 'react';
-import { DataGrid, GridColDef, GridRowId, GridRowSelectionModel } from '@mui/x-data-grid';
-import { IEmployee, IEmployeeList, IEmployeeListProps } from '../types/interfaces'
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { IEmployeeList, IEmployeeListProps } from '../types/interfaces'
 import { getEmployees } from '../services/employee.service';
+import { from } from 'rxjs';
 
 
 const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 100 },
-    { field: 'firstName', headerName: 'First Name', width: 150 },
-    { field: 'lastName', headerName: 'Last Name', width: 150 },
-    { field: 'email', headerName: 'Email', width: 200 },
-    { field: 'phoneNumber', headerName: 'Phone Number', width: 150 },
-     { field: 'streetName', headerName: 'Street Name', width: 150, 
-      valueGetter: (employee) => employee.row.addresses[0].streetName
-    },
-    { field: 'apartmentNumber', headerName: 'Apartment Number', width: 150, 
-      valueGetter: (employee) => employee.row.addresses[0].apartmentNumber
-    },
-    { field: 'postalCode', headerName: 'Postal Code', width: 150, 
-      valueGetter: (employee) => employee.row.addresses[0].postalCode
-    },
-    { field: 'state', headerName: 'State', width: 150, 
-      valueGetter: (employee) => employee.row.addresses[0].state
-    },
-    { field: 'country', headerName: 'Country', width: 150, 
-      valueGetter: (employee) => employee.row.addresses[0].country
-    } 
-  ];
+  { field: 'id', headerName: 'ID', width: 100 },
+  { field: 'firstName', headerName: 'First Name', width: 150 },
+  { field: 'lastName', headerName: 'Last Name', width: 150 },
+  { field: 'email', headerName: 'Email', width: 200 },
+  { field: 'phoneNumber', headerName: 'Phone Number', width: 150 },
+    { field: 'streetName', headerName: 'Street Name', width: 150, 
+    valueGetter: (employee) => employee.row.addresses[0].streetName
+  },
+  { field: 'apartmentNumber', headerName: 'Apartment Number', width: 150, 
+    valueGetter: (employee) => employee.row.addresses[0].apartmentNumber
+  },
+  { field: 'postalCode', headerName: 'Postal Code', width: 150, 
+    valueGetter: (employee) => employee.row.addresses[0].postalCode
+  },
+  { field: 'state', headerName: 'State', width: 150, 
+    valueGetter: (employee) => employee.row.addresses[0].state
+  },
+  { field: 'country', headerName: 'Country', width: 150, 
+    valueGetter: (employee) => employee.row.addresses[0].country
+  } 
+];
 
 
-const EmployeeList: React.FC<IEmployeeListProps> = ({selectedEmployeeId, updateSelectedEmployeeId, updateSelectedEmployee}) => {
-    const [employee, setEmployee] = useState<IEmployeeList>([]);
+const EmployeeList: React.FC<IEmployeeListProps> = ({selectedEmployeeId, updateSelectedEmployeeId}) => {
+    const [employees, setEmployees] = useState<IEmployeeList>([]);
     const [selectedRowId, setSelectedRowId] = useState<number>();
-    const [selectionModel, setSelectionModel] = React.useState<GridRowSelectionModel>(
-      () => employee.filter((r) => r.id > 0).map((r) => r.id)
-    );
 
-    const setEmployees = () => {
+    const setEmployeesArray = () => {
       getEmployees().then((data: any) => {
-        setEmployee(data);
+        setEmployees(data);
         console.log(data);
       })
       .catch((error: any) => {
@@ -47,35 +45,26 @@ const EmployeeList: React.FC<IEmployeeListProps> = ({selectedEmployeeId, updateS
 
     useEffect(
       function setEmployeesOnMounting() {
-      setEmployees();
-      setSelectedRowId(selectedEmployeeId);
+        setEmployeesArray();
+        setSelectedRowId(selectedEmployeeId);
     }, []);
 
     const onRowSelectionModelChangeHandler = (ids: any) => {
-      if (ids.length > 1) {
-        const selectionSet = new Set(selectionModel);
-        const result = ids.filter((s: GridRowId) => !selectionSet.has(s));
-
-        ids = result;
-
-        setSelectionModel(ids);
-      } else {
-        setSelectionModel(ids);
+      if (ids.length === 0) {
+        ids=[];
+        ids.push(-1);
+      } 
+      else if (ids.length > 1) {
+        let id = ids.pop();
+        ids=[];
+        ids.push(id);
       }
-
-      const selectedIDs = new Set(ids);
-      setSelectedRowId(ids);
-      let selectedRowId = Number(ids[0]);
-      updateSelectedEmployeeId(selectedRowId);
-      const selectedRowData = employee.filter((row: { id: GridRowId; }) =>
-        selectedIDs.has(selectedRowId),
-      );
-      updateSelectedEmployee(selectedRowData[selectedRowId-1]);
+      setSelectedRowId(ids[0]);
+      updateSelectedEmployeeId(ids[0]);
     }
 
     return (
         <>
-          <h3 style={{ textAlign: 'left'}}>Employee List</h3>
           <DataGrid sx={{
               "& .MuiDataGrid-columnHeaderCheckbox .MuiDataGrid-columnHeaderTitleContainer": {
                 display: "none"
@@ -85,10 +74,11 @@ const EmployeeList: React.FC<IEmployeeListProps> = ({selectedEmployeeId, updateS
             checkboxSelection
             columnHeaderHeight={50} 
             rowHeight={25} 
-            rows={employee} 
+            rows={employees} 
             columns={columns} 
             rowSelectionModel={selectedRowId}
             onRowSelectionModelChange={onRowSelectionModelChangeHandler}
+            hideFooterSelectedRowCount={true}
           /> 
         </>
     );

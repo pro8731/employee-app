@@ -30,7 +30,6 @@ export interface IFormComponentProps {}
 export interface IEmployeeListProps {
     selectedEmployeeId?: number;
     updateSelectedEmployeeId: (arg: number) => void
-    updateSelectedEmployee: (arg: IEmployee) => void
 }
 
 export interface IEmployeeListProps {}

@@ -10,30 +10,17 @@ import EmployeeReactHookForm from './components/employee.reactHookForm';
 import EmployeeFormik from './components/employee.formik';
 import NavigationDrawer from './components/navigation-drawer';
 import ApplicationHeader from './components/application-header';
-import { IEmployee } from './types/interfaces';
 import CreateEmployee from './components/createEmployee';
 import EditEmployee from './components/editEmployee';
 import DeleteEmployee from './components/deleteEmployee';
+import AlertDialog from './components/alert-dialog';
 
 
-function App() {
-  const [selectedEmployee, setSelectedEmployee] = useState<IEmployee>();
+const App: React.FC<{}> = ({}) => {
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<number>(-1);
-
-  const initEmployee = {
-    id: 0,
-    firstName: "", lastName: "", email: "", phoneNumber: "",            
-    addresses: [{ streetName: "", apartmentNumber: 0, postalCode: "", state: "", country: "" }]
-  };  
 
   const updateSelectedEmployeeId = (id: number):void => {
     setSelectedEmployeeId(id);
-    // alert("app update employee id - selectedRow: " + id);
-  }
-
-  const updateSelectedEmployee = (data: any):void => {
-    setSelectedEmployee(data);
-    // alert("app update employee - employee: " + data);
   }
 
   return (
@@ -55,23 +42,24 @@ function App() {
           <Grid item xs={12}>
 
             <div style={{ marginTop: '20px', height: 300, width: '100%' }}>
-            {/* <h3 style={{ textAlign: 'right'}}>selectedEmployeeId={selectedEmployeeId}</h3> */}
 
               <Routes>
-                <Route path="/" element={<EmployeeList selectedEmployeeId={selectedEmployeeId} updateSelectedEmployeeId={updateSelectedEmployeeId} updateSelectedEmployee={updateSelectedEmployee} />} />
+                <Route path="/" element={<EmployeeList selectedEmployeeId={selectedEmployeeId} updateSelectedEmployeeId={updateSelectedEmployeeId} />} />
 
-                <Route path="/add-employee-react-hook" element={<CreateEmployee formComponent={<EmployeeReactHookForm employee={initEmployee} />} />} />
-                <Route path="/add-employee-formik" element={<CreateEmployee formComponent={<EmployeeFormik employee={initEmployee} />} />} /> 
+                <Route path="/add-employee-react-hook" element={<CreateEmployee formComponent={<EmployeeReactHookForm id={-1} />} />} />
+                <Route path="/add-employee-formik" element={<CreateEmployee formComponent={<EmployeeFormik id={-1} />} />} /> 
 
-                {selectedEmployeeId !== undefined && selectedEmployeeId > 0 ? (
+                {selectedEmployeeId !== undefined && selectedEmployeeId > -1 ? (
                   <>
-                  <Route path="/edit-employee-react-hook" element={<EditEmployee formComponent={<EmployeeReactHookForm employee={selectedEmployee ?? initEmployee} />} />} />
-                  <Route path="/edit-employee-formik" element={<EditEmployee formComponent={<EmployeeFormik employee={selectedEmployee ?? initEmployee} />} />} />
+                  <Route path="/edit-employee-react-hook" element={<EditEmployee formComponent={<EmployeeReactHookForm id={selectedEmployeeId} />} />} />
+                  <Route path="/edit-employee-formik" element={<EditEmployee formComponent={<EmployeeFormik id={selectedEmployeeId} />} />} />
                   <Route path="/delete-employee" element={<DeleteEmployee selectedEmployeeId={selectedEmployeeId} />} />
                   </> 
                 ) : (
                   <>
-                  <Route path="" />
+                  <Route path="/edit-employee-react-hook" Component={AlertDialog} />
+                  <Route path="/edit-employee-formik" Component={AlertDialog} />
+                  <Route path="/delete-employee" Component={AlertDialog} />
                   </>
                 )}
               </Routes>

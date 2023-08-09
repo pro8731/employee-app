@@ -7,11 +7,11 @@ const DeleteEmployee: React.FC<IEmployeeDelete> = (props) => {
 
     const navigate = useNavigate();
     useEffect(() => {
-        if (props.selectedEmployeeId !== undefined) {
-            deleteEmployee(props.selectedEmployeeId);
-            navigate("/");
-        }
-      }, []);
+    if (props.selectedEmployeeId !== undefined && props.selectedEmployeeId > -1) {
+        deleteEmployee(props.selectedEmployeeId);
+        navigate("/");
+    }
+    }, []);
 
     return <></>;    
 };
