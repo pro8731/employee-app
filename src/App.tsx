@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import './App.css';
-import EmployeeList from './components/employeeList';
+import EmployeeList from './components/employee-list';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
 import { Grid } from '@mui/material';
 import { Route, Routes } from 'react-router-dom';
-import EmployeeReactHookForm from './components/employee.reactHookForm';
-import EmployeeFormik from './components/employee.formik';
-import NavigationDrawer from './components/navigation-drawer';
-import ApplicationHeader from './components/application-header';
-import CreateEmployee from './components/createEmployee';
-import EditEmployee from './components/editEmployee';
-import DeleteEmployee from './components/deleteEmployee';
-import AlertDialog from './components/alert-dialog';
+import EmployeeReactHookForm from './components/forms/employee-react-hook-form';
+import EmployeeFormik from './components/forms/employee-formik';
+import NavigationDrawer from './components/layout/navigation-drawer';
+import ApplicationHeader from './components/layout/application-header';
+import CreateEmployee from './components/create-employee';
+import EditEmployee from './components/edit-employee';
+import DeleteEmployee from './components/delete-employee';
+import AlertDialog from './components/dialogs/alert-dialog';
 
 
 const App: React.FC<{}> = ({}) => {

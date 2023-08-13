@@ -6,6 +6,9 @@ export interface IAddress {
     country?: string;
 }
 
+export interface IAddressList extends Array<IAddress> {} 
+
+
 export interface IEmployee {
     id: number;
     firstName?: string;
@@ -15,11 +18,8 @@ export interface IEmployee {
     addresses: IAddressList;  
 }  
 
-export interface IAddressList extends Array<IAddress> {} 
 export interface IEmployeeList extends Array<IEmployee> {} 
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export interface IFormComponentProps {
     formComponent?: React.ReactNode;
@@ -27,12 +27,14 @@ export interface IFormComponentProps {
 
 export interface IFormComponentProps {}
 
+
 export interface IEmployeeListProps {
     selectedEmployeeId?: number;
     updateSelectedEmployeeId: (arg: number) => void
 }
 
 export interface IEmployeeListProps {}
+
 
 export interface IEmployeeDelete {
     selectedEmployeeId?: number;
